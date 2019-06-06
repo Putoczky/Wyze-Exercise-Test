@@ -1,1 +1,1 @@
-# Wyze-Exercise-Test
+# Skeleton project for Swagger
