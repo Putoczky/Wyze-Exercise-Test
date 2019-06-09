@@ -1,12 +1,12 @@
 swagger: "2.0"
 info:
   version: "0.0.1"
-  title: Hello World App
+  title: Email Sender App
 # during dev, should point to your local machine
-host: localhost:10010
-# basePath prefixes all resource paths 
+host: localhost:5000
+# basePath prefixes all resource paths
 basePath: /
-# 
+#
 schemes:
   # tip: remove http to make production-grade
   - http
@@ -14,9 +14,15 @@ schemes:
 # format of bodies a client can send (Content-Type)
 consumes:
   - application/json
+  - multipart/form-data
 # format of the responses to the client (Accepts)
 produces:
   - application/json
+securityDefinitions:
+  api_key:
+    type: apiKey
+    in: header
+    name: api_key
 paths:
   /hello:
     # binds a127 app logic to a route
@@ -31,6 +37,26 @@ paths:
           description: The name of the person to whom to say hello
           required: false
           type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/HelloWorldResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    post:
+      description: Test
+      operationId: attachment
+      parameters:
+        - description: 'Middleware file'
+          in: formData
+          name: file
+          required: true
+          type: file
       responses:
         "200":
           description: Success
