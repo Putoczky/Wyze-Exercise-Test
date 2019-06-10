@@ -26,7 +26,8 @@ function sendmail(req, res){
   var options = mailOptions.set(emailData);
   transport.sendMail(options, (error, info) => {
     if (error) {
-        return console.log(error);
+      return res.status(400)
+                .json({"error":"Unexpected error occurred."})
     }
     console.log('Message sent: %s', info.messageId);
   });
@@ -37,7 +38,7 @@ function attachment(req, res){
   var file = req.swagger.params.file.value;
   var fileExtension = file.originalname.slice(file.originalname.lastIndexOf("."));
   if(AllowedExtension.indexOf(fileExtension.toLowerCase()) === -1) {
-    return res.status(400)
+    return res.status(415)
               .json({"error":"The file extension is not supported."});
   }
   if(file.size > 625000) {
@@ -52,5 +53,5 @@ function attachment(req, res){
                 .json({"error":"The file is not uploaded."})
     }
   });
-  res.status(200).json({"id":id});
+  return res.status(200).json({"id":id});
 }

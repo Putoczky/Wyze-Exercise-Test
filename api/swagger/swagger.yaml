@@ -43,7 +43,11 @@ paths:
           schema:
             type: object
         "400":
-            description: The attachment is too larger or file extension is not supported.
+            description: The attachment is too larger
+            schema:
+              type: object
+        "415":
+            description: File extension is not supported
             schema:
               type: object
         default:
@@ -68,6 +72,10 @@ paths:
           description: Mail was successfully sent
           schema:
             type: object
+        "400":
+            description: Unexpected error occurred
+            schema:
+              type: object
         default:
           description: Error
           schema:
