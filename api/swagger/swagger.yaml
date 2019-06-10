@@ -24,60 +24,74 @@ securityDefinitions:
     in: header
     name: api_key
 paths:
-  /hello:
-    # binds a127 app logic to a route
-    x-swagger-router-controller: hello_world
-    get:
-      description: Returns 'Hello' to the caller
-      # used as the method name of the controller
-      operationId: hello
-      parameters:
-        - name: name
-          in: query
-          description: The name of the person to whom to say hello
-          required: false
-          type: string
-      responses:
-        "200":
-          description: Success
-          schema:
-            # a pointer to a definition
-            $ref: "#/definitions/HelloWorldResponse"
-        # responses may fall through to errors
-        default:
-          description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
+  /attachment:
+    x-swagger-router-controller: EmailController
     post:
       description: Test
       operationId: attachment
       parameters:
-        - description: 'Middleware file'
+        - description: Attachment file
           in: formData
           name: file
           required: true
           type: file
       responses:
         "200":
-          description: Success
+          description: The attachment was uploaded
           schema:
-            # a pointer to a definition
-            $ref: "#/definitions/HelloWorldResponse"
-        # responses may fall through to errors
+            type: object
+        "413":
+            description: The attachment is too larger.
+            schema:
+              type: object
         default:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  /swagger:
-    x-swagger-pipe: swagger_raw
-# complex objects have schema definitions
+  /send-mail:
+    x-swagger-router-controller: hello_world
+    post:
+      description: Test
+      operationId: sendmail
+      parameters:
+        - in: body
+          name: maildata
+          description: Data of mail
+          schema:
+            $ref: '#/definitions/EmailData'
+      responses:
+        "200":
+          description: Mail was successfully sent
+          schema:
+            type: object
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
 definitions:
-  HelloWorldResponse:
+  EmailData:
     required:
-      - message
+      - subject
+      - to
     properties:
-      message:
+      subject:
         type: string
+      to:
+        type: array
+        items:
+          type: string
+      cc:
+        type: array
+        items:
+          type: string
+      text:
+        type: string
+      html:
+        type: string
+      attachmentIds:
+          type: array
+          items:
+              type: string
   ErrorResponse:
     required:
       - message
