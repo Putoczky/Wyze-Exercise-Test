@@ -20,7 +20,7 @@ var transport = nodemailer.createTransport({
       pass: "aqdkwmlqugidynww"
   }
 });
-
+var AllowedExtension = process.env.ALLOWEDEXTENSION || [".jpg", ".docx", ".png", ".txt"]
 function sendmail(req, res){
   var emailData = req.swagger.params.maildata.value;
   var options = mailOptions.set(emailData);
@@ -35,15 +35,22 @@ function sendmail(req, res){
 
 function attachment(req, res){
   var file = req.swagger.params.file.value;
+  var fileExtension = file.originalname.slice(file.originalname.lastIndexOf("."));
+  if(AllowedExtension.indexOf(fileExtension.toLowerCase()) === -1){
+    res.status(400).json({"error":"The file extension is not supported."})
+    var err = {
+      message: "The extension is not supported."
+    };
+    return next(err);
+  }
   if(file.size > 625000) {
-    res.status(413).json({"error":"The attachment is larger than 5Mb."})
+    res.status(400).json({"error":"The attachment is larger than 5Mb."})
     var err = {
       message: "The attachment is larger than 5Mb."
     };
     return next(err);
   }
   var id = idGenerator.generator();
-  var fileExtension = file.originalname.slice(file.originalname.lastIndexOf("."));
   var path = 'uploads/'+ id + fileExtension;
   fs.writeFile( path , file.buffer , function (err) {
     if (err) {

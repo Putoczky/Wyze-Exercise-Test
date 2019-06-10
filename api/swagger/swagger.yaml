@@ -35,13 +35,15 @@ paths:
           name: file
           required: true
           type: file
+      security:
+        - api_key: []
       responses:
         "200":
           description: The attachment was uploaded
           schema:
             type: object
-        "413":
-            description: The attachment is too larger.
+        "400":
+            description: The attachment is too larger or file extension is not supported.
             schema:
               type: object
         default:
@@ -59,6 +61,8 @@ paths:
           description: Data of mail
           schema:
             $ref: '#/definitions/EmailData'
+      security:
+        - api_key: []
       responses:
         "200":
           description: Mail was successfully sent
