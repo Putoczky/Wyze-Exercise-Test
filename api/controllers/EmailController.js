@@ -36,29 +36,20 @@ function sendmail(req, res){
 function attachment(req, res){
   var file = req.swagger.params.file.value;
   var fileExtension = file.originalname.slice(file.originalname.lastIndexOf("."));
-  if(AllowedExtension.indexOf(fileExtension.toLowerCase()) === -1){
-    res.status(400).json({"error":"The file extension is not supported."})
-    var err = {
-      message: "The extension is not supported."
-    };
-    return next(err);
+  if(AllowedExtension.indexOf(fileExtension.toLowerCase()) === -1) {
+    return res.status(400)
+              .json({"error":"The file extension is not supported."});
   }
   if(file.size > 625000) {
-    res.status(400).json({"error":"The attachment is larger than 5Mb."})
-    var err = {
-      message: "The attachment is larger than 5Mb."
-    };
-    return next(err);
+    return res.status(400)
+              .json({"error":"The attachment is larger than 5Mb."})
   }
   var id = idGenerator.generator();
   var path = 'uploads/'+ id + fileExtension;
   fs.writeFile( path , file.buffer , function (err) {
     if (err) {
-      debug(err);
-      var err = {
-        message: 'File not uploaded'
-      };
-      return next(err);
+      return res.status(400)
+                .json({"error":"The file is not uploaded."})
     }
   });
   res.status(200).json({"id":id});
