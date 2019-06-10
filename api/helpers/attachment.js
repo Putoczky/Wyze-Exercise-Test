@@ -2,7 +2,7 @@ var fs = require('fs');
 
 module.exports = {
     isfiletypematch: isfiletypematch,
-    checkfilesize: checkfilesize,
+    isfilesizelessthen: isfilesizelessthen,
 };
 var AllowedExtension = process.env.ALLOWED_EXTENSION || [".jpg", ".docx", ".png", ".txt"]
 function isfiletypematch(fileExtension){
