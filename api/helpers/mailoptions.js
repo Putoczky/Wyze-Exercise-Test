@@ -1,9 +1,9 @@
 var fs = require('fs');
 module.exports = {
-    set: set
+    setmailoptions: setmailoptions
 };
 
-function set(emailData) {
+function setmailoptions(emailData) {
     var att = [];
     fs.readdirSync('uploads/').forEach(element => {
         if(emailData.attachmentIds.indexOf(element.slice(0, element.lastIndexOf("."))) > -1){

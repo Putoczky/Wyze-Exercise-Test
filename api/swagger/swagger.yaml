@@ -28,7 +28,7 @@ paths:
     x-swagger-router-controller: EmailController
     post:
       description: Test
-      operationId: attachment
+      operationId: addattachment
       parameters:
         - description: Attachment file
           in: formData
@@ -55,7 +55,7 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
   /send-mail:
-    x-swagger-router-controller: hello_world
+    x-swagger-router-controller: EmailController
     post:
       description: Test
       operationId: sendmail

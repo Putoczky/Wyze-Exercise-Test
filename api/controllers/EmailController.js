@@ -5,9 +5,10 @@ var multer = require('multer');
 var fs = require('fs');
 var idGenerator = require('../helpers/idgenerator');
 var mailOptions = require('../helpers/mailoptions');
+var attachmenthelper = require('../helpers/attachment');
 
 module.exports = {
-  attachment: attachment,
+  addattachment: addattachment,
   sendmail: sendmail
 };
 
@@ -20,10 +21,10 @@ var transport = nodemailer.createTransport({
       pass: "aqdkwmlqugidynww"
   }
 });
-var AllowedExtension = process.env.ALLOWEDEXTENSION || [".jpg", ".docx", ".png", ".txt"]
+
 function sendmail(req, res){
   var emailData = req.swagger.params.maildata.value;
-  var options = mailOptions.set(emailData);
+  var options = mailOptions.setmailoptions(emailData);
   transport.sendMail(options, (error, info) => {
     if (error) {
       return res.status(400)
@@ -34,24 +35,21 @@ function sendmail(req, res){
   res.status(200).json({'message': "Email was sent."});
 }
 
-function attachment(req, res){
+function addattachment(req, res){
   var file = req.swagger.params.file.value;
   var fileExtension = file.originalname.slice(file.originalname.lastIndexOf("."));
-  if(AllowedExtension.indexOf(fileExtension.toLowerCase()) === -1) {
+  var sizeinbyte = 5000000;
+  if(attachmenthelper.isfilesizelessthen(file, sizeinbyte)){
+    return res.status(400)
+              .json({"error":"The attachment is larger than 5MB."})
+  }
+  if(attachmenthelper.isfiletypematch(fileExtension)){
     return res.status(415)
               .json({"error":"The file extension is not supported."});
   }
-  if(file.size > 625000) {
-    return res.status(400)
-              .json({"error":"The attachment is larger than 5Mb."})
-  }
   var id = idGenerator.generator();
   var path = 'uploads/'+ id + fileExtension;
-  fs.writeFile( path , file.buffer , function (err) {
-    if (err) {
-      return res.status(400)
-                .json({"error":"The file is not uploaded."})
-    }
-  });
+  fs.writeFileSync(path, file.buffer);
+
   return res.status(200).json({"id":id});
 }
