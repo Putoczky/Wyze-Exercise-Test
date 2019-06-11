@@ -1,7 +1,6 @@
 'use strict';
 
 var nodemailer = require('nodemailer');
-var multer = require('multer');
 var fs = require('fs');
 var idGenerator = require('../helpers/idgenerator');
 var mailOptions = require('../helpers/mailoptions');
@@ -12,7 +11,6 @@ module.exports = {
   sendmail: sendmail
 };
 
-multer({ dest: './uploads'});
 var transport = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 587,
@@ -21,6 +19,11 @@ var transport = nodemailer.createTransport({
       pass: "aqdkwmlqugidynww"
   }
 });
+var dir = './uploads';
+
+if (!fs.existsSync(dir)){
+    fs.mkdirSync(dir);
+}
 
 function sendmail(req, res){
   var emailData = req.swagger.params.maildata.value;
@@ -38,7 +41,7 @@ function sendmail(req, res){
 function addattachment(req, res){
   var file = req.swagger.params.file.value;
   var fileExtension = file.originalname.slice(file.originalname.lastIndexOf("."));
-  var sizeinbyte = 5000000;
+  var sizeinbyte = 1024 * 1024 * 5;
   if(attachmenthelper.isfilesizelessthen(file, sizeinbyte)){
     return res.status(400)
               .json({"error":"The attachment is larger than 5MB."})
