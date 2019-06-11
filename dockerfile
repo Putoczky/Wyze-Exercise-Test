@@ -5,7 +5,7 @@ COPY ./package.json /usr
 RUN npm install --silent
 COPY . /usr
 ENV FROM testmailputoczky@gmail.com
-ENV ALLOWED_EXTENSION [".jpg", ".docx", ".png", ".txt"]
+ENV ALLOWED_EXTENSION .jpg,.docx,.png,.txt
 EXPOSE 5000
 ENTRYPOINT ["npm", "run"]
 CMD ["start"]

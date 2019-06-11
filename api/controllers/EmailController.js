@@ -19,11 +19,7 @@ var transport = nodemailer.createTransport({
       pass: "aqdkwmlqugidynww"
   }
 });
-var dir = './uploads';
-
-if (!fs.existsSync(dir)){
-    fs.mkdirSync(dir);
-}
+attachmenthelper.createdirectoryforattachment();
 
 function sendmail(req, res){
   var emailData = req.swagger.params.maildata.value;
