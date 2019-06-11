@@ -10,5 +10,5 @@ function generator(){
     crypto.randomBytes(16),
     'hex',
     { prefix: '0x' });
-return id;
+  return id;
 }
