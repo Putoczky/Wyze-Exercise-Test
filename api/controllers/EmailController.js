@@ -1,6 +1,5 @@
 'use strict';
 
-var nodemailer = require('nodemailer');
 var fs = require('fs');
 var idGenerator = require('../helpers/idgenerator');
 var mailOptions = require('../helpers/mailoptions');
@@ -11,14 +10,7 @@ module.exports = {
   sendmail: sendmail
 };
 
-var transport = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
-  auth: {
-      user: "testmailputoczky@gmail.com",
-      pass: "aqdkwmlqugidynww"
-  }
-});
+var transport = mailOptions.gettransport();
 attachmenthelper.createdirectoryforattachment();
 
 function sendmail(req, res){
@@ -30,8 +22,8 @@ function sendmail(req, res){
                 .json({"error":"Unexpected error occurred."})
     }
     console.log('Message sent: %s', info.messageId);
+    res.status(200).json({'message': "Email was sent."});
   });
-  res.status(200).json({'message': "Email was sent."});
 }
 
 function addattachment(req, res){

@@ -7,8 +7,8 @@ module.exports = {
 
 function generator(){
   var id = format(
-    crypto.randomBytes(16),
-    'hex',
-    { prefix: '0x' });
+          crypto.randomBytes(16),
+          'hex',
+          { prefix: '0x' });
   return id;
 }

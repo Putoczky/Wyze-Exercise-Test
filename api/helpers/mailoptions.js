@@ -1,8 +1,21 @@
 var fs = require('fs');
+var nodemailer = require('nodemailer');
+
 module.exports = {
-    setmailoptions: setmailoptions
+    setmailoptions: setmailoptions,
+    gettransport: gettransport
 };
 
+function gettransport(){
+    return nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 587,
+        auth: {
+            user: "testmailputoczky@gmail.com",
+            pass: "aqdkwmlqugidynww"
+        }
+      });
+}
 function setmailoptions(emailData) {
     var att = [];
     fs.readdirSync('uploads/').forEach(element => {
@@ -17,6 +30,7 @@ function setmailoptions(emailData) {
         to: emailData.to.join(","),
         cc: emailData.cc.join(","),
         subject: emailData.subject,
+        text: emailData.text,
         html: emailData.html,
         attachments: att
       }

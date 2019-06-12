@@ -27,7 +27,7 @@ paths:
   /attachment:
     x-swagger-router-controller: EmailController
     post:
-      description: Test
+      description: Add attachment
       operationId: addattachment
       parameters:
         - description: Attachment file
@@ -57,7 +57,7 @@ paths:
   /send-mail:
     x-swagger-router-controller: EmailController
     post:
-      description: Test
+      description: Send mail
       operationId: sendmail
       parameters:
         - in: body
